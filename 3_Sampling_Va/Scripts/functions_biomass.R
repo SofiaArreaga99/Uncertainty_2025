@@ -42,12 +42,12 @@ calc_biomass <- function(coeff_file, inv_file, complot_file, comp_file) {
   var_by_comp  <- aggregate(PloKg_Ha.sum ~ Comp, data=Plots_Compa, FUN=var)
   n_by_comp    <- aggregate(PloKg_Ha.sum ~ Comp, data=Plots_Compa, FUN=length)
   
-  # Dynamic Merge with SampVa (This was neccesary because we are using different years)
+  # Dynamic Merge with SampVa (Merge)
   SampVa <- merge(SampVa, mean_by_comp, by="Comp", all.x=TRUE)
   SampVa <- merge(SampVa, var_by_comp, by="Comp", all.x=TRUE, suffixes=c("_mean","_var"))
   SampVa <- merge(SampVa, n_by_comp, by="Comp", all.x=TRUE, suffixes=c("","_n"))
   
-  # Rename clear columns (This was neccesary because we are using different years)
+  # Rename clear columns (This was necessary to ensure the model runs smoothly across different years)
   names(SampVa)[names(SampVa) == "PloKg_Ha.sum"] <- "n"
   names(SampVa)[names(SampVa) == "PloKg_Ha.sum_mean"] <- "Mean"
   names(SampVa)[names(SampVa) == "PloKg_Ha.sum_var"] <- "Var"

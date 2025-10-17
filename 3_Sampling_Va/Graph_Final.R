@@ -1,6 +1,6 @@
 
 # Function for error bars
-adderrorbars <- function(x,y,SD,direction,barlen=0.04,lwd=1.5,...){
+adderrorbars <- function(x,y,SD,direction,barlen=0.04,lwd=1.8,...){
   
   if(length(direction)>1)stop("direction must be of length one.")
   if(direction == "rightleft" | direction == "leftright")direction <- c("left","right")

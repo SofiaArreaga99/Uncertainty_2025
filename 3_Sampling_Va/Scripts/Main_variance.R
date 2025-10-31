@@ -17,6 +17,7 @@ resultados <- calc_biomass("C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/4_
 write.csv(resultados$Plots_Compa, "C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/3_Sampling_Va/output/Plots_Compa1970.csv", row.names = FALSE)
 write.csv(resultados$SampVa, "C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/3_Sampling_Va/output/SampVa1970.csv", row.names = FALSE)
 
+
 #--------------------------------------------------------------------
 # ....1981
 #--------------------------------------------------------------------
@@ -90,7 +91,6 @@ resultados <- calc_biomass("C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/4_
 # Guardar resultados
 write.csv(resultados$Plots_Compa, "C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/3_Sampling_Va/output/Plots_Compa2021.csv", row.names = FALSE)
 write.csv(resultados$SampVa, "C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/3_Sampling_Va/output/SampVa2021.csv", row.names = FALSE)
-
 
 
 

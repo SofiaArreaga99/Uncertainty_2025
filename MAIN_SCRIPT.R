@@ -225,7 +225,7 @@ datos <- data.frame(
 # Hacemos un gráfico básico - Creation of the graphic 
 
 plot(datos$Year, datos$MgC, type="p", pch=19, cex= 1.2, col="black", ylim=c(65,100),
-     xlab="Year", ylab="Biomass (MgC)", main="Biomass with Error Bars")
+     xlab="Year", ylab="Biomass Mg C ha -1", main="Biomass with Error Bars")
 
 lines(datos$Year, datos$MgC, lwd=1, col="black",lty=2)
 

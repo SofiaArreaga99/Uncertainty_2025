@@ -7,8 +7,8 @@
 #--------------------------------------------------------------------
 
 # Allometric uncertainty functions 
-source("C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/2_Biomass_Project/R/Load_packages.R")
-source("C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/2_Biomass_Project/R/Read_data.R")
+source("2_Biomass_Project/R/Load_packages.R")
+source("2_Biomass_Project/R/Read_data.R")
 source("C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/2_Biomass_Project/R/Process_iteration.R")
 source("C:/Users/vanco/Desktop/ResearchR/Uncertainty_2025/2_Biomass_Project/R/Run_iterations.R")
 

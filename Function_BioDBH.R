@@ -30,7 +30,7 @@ ggplot(curves, aes(x = DBHcm, y = Y_kg, color = Species)) +
   geom_line(size = 1.2) +
   labs(
     x = "DBH (cm)",                      # eje X en cm
-    y = "Biomass (kg)",
+    y = "Aboveground Live Biomass (kg)",
     title = "Biomass as a function of DBH"
   ) +
   theme_minimal(base_size = 14) +

@@ -297,14 +297,15 @@ library(MASS)
 
 # Seleccionar 1000 filas aleatorias
 set.seed(555)  # para reproducibilidad
-subset_idx <- sample(1:nrow(PseudoData1), 800)
+subset_idx <- sample(1:nrow(PseudoData1), 5000)
+
 
 # Graficar solo esas 1000
 plot(PseudoData1$dbh_1[subset_idx], PseudoData1$BM_1[subset_idx],
      pch = 1,
      col = "#FFD700",   # azul semi-transparente
      xlab = "DBH (cm)", 
-     ylab = "Biomass (kg)", 
+     ylab = "Aboveground Live Biomass (kg)", 
      main = "Acer saccharum",
      cex = 1.2)
 grid()

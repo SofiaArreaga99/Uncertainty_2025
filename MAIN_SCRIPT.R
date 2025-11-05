@@ -28,7 +28,7 @@ load_packages()
 #--------------------------------------------------------------------
 
 data1970 <- read_data(
-  "4_General_Resources/MergeCov.csv",
+  "4_General_Resources/MergeCov_2.csv",
   "4_General_Resources/data1970.csv"
 )
 
@@ -44,7 +44,7 @@ print(results1970)
 #--------------------------------------------------------------------
 
 data1981 <- read_data(
-  "4_General_Resources/MergeCov.csv",
+  "4_General_Resources/MergeCov_2.csv",
   "4_General_Resources/data1981.csv"
 )
 
@@ -52,14 +52,14 @@ results1981 <- run_iterations(data1981$frameCoeff2, data1981$Plot1HWF)
 
 print(results1981)
 # Guardar resultados si quieres
-#write.csv(results1981, "2_Biomass_project/outputBm/PlotsTotal1981.csv", row.names = FALSE)
+write.csv(results1981, "2_Biomass_project/outputBm/PlotsTotal1981.csv", row.names = FALSE)
 
 #--------------------------------------------------------------------
 # ....1991
 #--------------------------------------------------------------------
 
 data1991 <- read_data(
-  "4_General_Resources/MergeCov.csv",
+  "4_General_Resources/MergeCov_2.csv",
   "4_General_Resources/data1991.csv"
 )
 
@@ -73,7 +73,7 @@ print(results1991)
 #--------------------------------------------------------------------
 
 data2001 <- read_data(
-  "4_General_Resources/MergeCov.csv",
+  "4_General_Resources/MergeCov_2.csv",
   "4_General_Resources/data2001.csv"
 )
 
@@ -86,7 +86,7 @@ print(results2001)
 #--------------------------------------------------------------------
 
 data2011 <- read_data(
-  "4_General_Resources/MergeCov.csv",
+  "4_General_Resources/MergeCov_2.csv",
   "4_General_Resources/data2011.csv"
 )
 
@@ -99,7 +99,7 @@ print(results2011)
 #--------------------------------------------------------------------
 
 data2021 <- read_data(
-  "4_General_Resources/MergeCov.csv",
+  "4_General_Resources/MergeCov_2.csv",
   "4_General_Resources/data2021.csv"
 )
 
@@ -113,7 +113,7 @@ write.csv(results2021, "2_Biomass_project/outputBm/PlotsTotal2021.csv", row.name
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-#  Allometric uncertainty :) 
+#  Sampling variance  :) 
 #--------------------------------------------------------------------
 # Some plots have been added over the years.
 #--------------------------------------------------------------------
@@ -306,11 +306,14 @@ abline(v = annual_rate_mean, col = "red", lwd = 2)  # línea de la media
 #Grafico de resultados primarios, incertidumbre alometrica vs error de muestreo
 #results graph, allometric uncertainty vs. sampling error
 
+# Function for the graph 
+source("adderrorbars.R")
+
 # My data 
 datos <- data.frame(
   Year = c(1970, 1981, 1991, 2001, 2010, 2020),
-  MgC = c(79.31, 71.24, 76.40, 83.99, 90.89, 94),
-  SD = c(1.5, 1.32, 1.64, 1.87, 2.17, 2.09), # allometric uncertainty
+  MgC = c(79.38, 71.32, 76.50, 84.12, 91.06, 94.17),
+  SD = c(1.49, 1.31, 1.62, 1.85, 2.14, 2.06), # allometric uncertainty
   SD_SV <- c(1.93, 2.03, 2.20, 2.06, 1.99, 2.03) #Sampling variance New
 )
 

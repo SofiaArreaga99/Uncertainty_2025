@@ -1,3 +1,4 @@
+#Creation fo 10, 30 and 50 inches dbh 
 
 library(readr)
 coefficients_1 <- read_csv("1_Coefficients_Species_Uncertainty/coefficients_1.csv")

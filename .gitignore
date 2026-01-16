@@ -1,0 +1,20 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.FraxinusA.R
+.FagusG.R
+.Betula_Alle.R
+.AcerSac.R
+.AcerRubrum.R
+.PiceaRu.R
+.TsugaCanadensis.R
+
+
+git rm --cached .FraxinusA.R
+git rm --cached .FagusG.R
+git rm --cached .Betula_Alle.R
+git rm --cached .AcerSac.R
+git rm --cached .AcerRubrum.R
+git rm --cached .PiceaRu.R
+git rm --cached .TsugaCanadensis.R

@@ -498,25 +498,18 @@ print(species_summary)
 # 5. TWO GRAPHS TOGETHER - DOS GRAFICOS JUNTOS 
 # ==============================================================================
 
-# Organizing data 
-
-#uploading the files
+# Uploading the files
 dbh_dis2021 <- read_csv("Figures/diameter_distribution_by_species2021.csv")
 dbh_dis1981 <- read_csv("Figures/diameter_distribution_by_species1981.csv")
 
-#Adding years
-dbh_dis1981<-dbh_dis1981%>%
+# Adding years
+dbh_dis1981 <- dbh_dis1981 %>%
   mutate(year = 1981)
-
-dbh_dis2021<-dbh_dis2021%>%
+dbh_dis2021 <- dbh_dis2021 %>%
   mutate(year = 2021)
 
-head(dbh_dis1981)
-head(dbh_dis2021)
-#Combining the information 
-dbh_dis81_21<-rbind(dbh_dis1981,dbh_dis2021)
-
-# Graph # 
+# Combining the information 
+dbh_dis81_21 <- rbind(dbh_dis1981, dbh_dis2021)
 
 library(ggplot2)
 library(patchwork)
@@ -533,7 +526,7 @@ okabe_ito <- c(
   "#CC79A7"  # reddish purple
 )
 
-# Reordenar los niveles de DBH_interval - Reorder the DBH_interval levels
+# Reordenar los niveles de DBH_interval
 dbh_dis81_21$DBH_interval <- factor(dbh_dis81_21$DBH_interval,
                                     levels = c("10-15", "15-20", "20-25", "25-30",
                                                "30-35", "35-40", "40-45", "45-50",
@@ -541,47 +534,59 @@ dbh_dis81_21$DBH_interval <- factor(dbh_dis81_21$DBH_interval,
                                                "70-75", "75-80", "80-85", "85-90",
                                                "90-95", "95-100", "100-105"))
 
-# Definir especies con aumento y disminución en QMD - Defining species with increasing and decreasing QMD
+# Definir especies con aumento y disminución en QMD
 species_increase <- c("Eastern Hemlock", "Red Maple", "Sugar Maple")
 species_decrease <- c("American Beech", "Red Spruce", "White Ash", "Yellow Birch")
 
-# Asignar colores únicos a cada especie - Assign unique colors to each species.
+# Asignar colores únicos a cada especie
 species_colors <- c(
-  "Eastern Hemlock" = okabe_ito[1],   # orange
-  "Red Maple" = okabe_ito[2],          # sky blue
-  "Sugar Maple" = okabe_ito[3],        # bluish green
-  "American Beech" = okabe_ito[4],     # yellow
-  "Red Spruce" = okabe_ito[5],         # blue
-  "White Ash" = okabe_ito[6],          # vermillion
-  "Yellow Birch" = okabe_ito[7]        # reddish purple
+  "Eastern Hemlock" = okabe_ito[1],
+  "Red Maple" = okabe_ito[2],
+  "Sugar Maple" = okabe_ito[3],
+  "American Beech" = okabe_ito[4],
+  "Red Spruce" = okabe_ito[5],
+  "White Ash" = okabe_ito[6],
+  "Yellow Birch" = okabe_ito[7]
 )
 
-# Filtrar datos para cada grupo - Filter data for each group
-dbh_increase <- dbh_dis81_21 %>%
+# Calcular frecuencia acumulada para cada especie y año
+dbh_cumulative <- dbh_dis81_21 %>%
+  group_by(common_name, year) %>%
+  arrange(DBH_interval) %>%
+  mutate(cumulative_trees_ha = cumsum(mean_trees_ha)) %>%
+  ungroup()
+
+# Filtrar datos para cada grupo
+dbh_increase <- dbh_cumulative %>%
   filter(common_name %in% species_increase)
 
-dbh_decrease <- dbh_dis81_21 %>%
+dbh_decrease <- dbh_cumulative %>%
   filter(common_name %in% species_decrease)
 
+# Seleccionar intervalos para mostrar en el eje X (cada 10 cm o cada 2 clases)
+x_breaks <- c("10-15", "20-25", "30-35", "40-45", "50-55", 
+              "60-65", "70-75", "80-85", "90-95", "100-105")
+
 # Gráfico para especies con AUMENTO en QMD (izquierda)
-# Graph for species with an INCREASE in QMD (left)
 p_increase <- ggplot(dbh_increase,
                      aes(x = DBH_interval,
-                         y = mean_trees_ha,
+                         y = cumulative_trees_ha,
                          color = common_name,
                          group = interaction(common_name, year),
                          linetype = factor(year))) +
-  geom_line() + 
-  geom_point(aes(shape = factor(year))) +
+  geom_line(linewidth = 1) + 
+  geom_point(aes(shape = factor(year)), size = 2) +
   labs(
     x = "Diameter class (cm)",
-    y = expression(paste("Trees ha"^"-1")),
+    y = expression(paste("Cumulative trees ha"^"-1")),
     color = "Species",
     linetype = "Year",
     shape = "Year",
     title = "Species with QMD Increase"
   ) + 
-  scale_y_continuous(breaks = seq(0, max(dbh_dis81_21$mean_trees_ha, na.rm = TRUE) + 20, by = 20),
+  scale_x_discrete(breaks = x_breaks) +  # Mostrar solo algunos intervalos
+  scale_y_continuous(breaks = seq(0, max(dbh_cumulative$cumulative_trees_ha, na.rm = TRUE), 
+                                  by = 50),
                      limits = c(0, NA)) +
   theme_classic() +
   theme(
@@ -593,29 +598,30 @@ p_increase <- ggplot(dbh_increase,
     legend.text = element_text(size = 10, face = "italic"),
     panel.grid.major = element_line(color = "gray90")
   ) + 
-  scale_color_manual(values = species_colors, drop = FALSE) +  # drop = FALSE mantiene todos los colores
+  scale_color_manual(values = species_colors, drop = FALSE) +
   scale_linetype_manual(values = c("1981" = "dashed", "2021" = "solid"),
                         labels = c("1981", "2021"))
 
 # Gráfico para especies con DISMINUCIÓN en QMD (derecha)
-# Graph for species with DECREASING QMD (right)
 p_decrease <- ggplot(dbh_decrease,
                      aes(x = DBH_interval,
-                         y = mean_trees_ha,
+                         y = cumulative_trees_ha,
                          color = common_name,
                          group = interaction(common_name, year),
                          linetype = factor(year))) +
-  geom_line() + 
-  geom_point(aes(shape = factor(year))) +
+  geom_line(linewidth = 1) + 
+  geom_point(aes(shape = factor(year)), size = 2) +
   labs(
     x = "Diameter class (cm)",
-    y = expression(paste("Trees ha"^"-1")),
+    y = expression(paste("Cumulative trees ha"^"-1")),
     color = "Species",
     linetype = "Year",
     shape = "Year",
     title = "Species with QMD Decrease"
   ) + 
-  scale_y_continuous(breaks = seq(0, max(dbh_dis81_21$mean_trees_ha, na.rm = TRUE) + 20, by = 20),
+  scale_x_discrete(breaks = x_breaks) +  # Mostrar solo algunos intervalos
+  scale_y_continuous(breaks = seq(0, max(dbh_cumulative$cumulative_trees_ha, na.rm = TRUE), 
+                                  by = 50),
                      limits = c(0, NA)) +
   theme_classic() +
   theme(
@@ -627,18 +633,16 @@ p_decrease <- ggplot(dbh_decrease,
     legend.text = element_text(size = 10, face = "italic"),
     panel.grid.major = element_line(color = "gray90")
   ) + 
-  scale_color_manual(values = species_colors, drop = FALSE) +  # drop = FALSE mantiene todos los colores
+  scale_color_manual(values = species_colors, drop = FALSE) +
   scale_linetype_manual(values = c("1981" = "dashed", "2021" = "solid"),
                         labels = c("1981", "2021"))
 
 # Combinar ambos gráficos lado a lado con leyenda compartida
-# Combine both graphs side by side with a shared legend.
 p_combined <- p_increase + p_decrease + 
   plot_layout(guides = "collect") & 
   theme(legend.position = "right")
 
 print(p_combined)
-
 
 ########################################################################
 # Stats category of DBH 

@@ -113,10 +113,7 @@ todas_especies <- rbind(
 View(todas_especies)
 
 # Save Guardar
-write.csv(todas_especies, "all_species_uncertainty.csv", row.names = FALSE)
-
-
-
+write.csv(todas_especies, "figures/all_species_uncertainty.csv", row.names = FALSE)
 
 # Convertir diámetros a cm y filtrar solo los diámetros deseados
 # Graph for 5, 10, 30, 50, 70, 100 inches
@@ -160,4 +157,80 @@ ggplot(todas_especies, aes(x = diameter, y = mean, color = species)) +
   geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 2) +
   labs(x = "Diameter (inches)", y = "Biomass", color = "Species") +
   theme_classic()
+
+########################################################################
+
+library(ggplot2)
+library(patchwork)  # Para combinar gráficos
+
+# Paleta Okabe-Ito (color-blind friendly)
+okabe_ito <- c(
+  "#E69F00", # orange
+  "#56B4E9", # sky blue
+  "#009E73", # bluish green
+  "#F0E442", # yellow
+  "#0072B2", # blue
+  "#D55E00", # vermillion
+  "#CC79A7"  # reddish purple
+)
+
+# Gráfico 1: Coefficient of Variation
+especies_filtradas <- todas_especies %>%
+  filter(diameter %in% c(5, 10, 30, 50, 70, 100))
+
+p1 <- ggplot(especies_filtradas, aes(x = diametercm, y = CVsd_mean, color = species)) +
+  geom_line(linewidth = 0.7) +
+  geom_point(size = 2.5) +
+  scale_x_continuous(
+    breaks = seq(0, 260, by = 50),
+    limits = c(0, 260)
+  ) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  scale_color_manual(values = okabe_ito) +
+  labs(
+    x = "Diameter (cm)",
+    y = "Coefficient of Variation (%)",
+    color = "Species",
+    title = "Coefficient of Variation by Species"
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    legend.position = "none",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(face = "italic"),
+    axis.title = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    panel.grid.major.y = element_line(color = "gray90"),
+    panel.grid.minor.y = element_line(color = "gray95")
+  )
+
+# Gráfico 2: Biomass with error bars
+p2 <- ggplot(todas_especies, aes(x = diameter, y = mean, color = species)) +
+  geom_line(linewidth = 0.7) +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd), width = 2, linewidth = 0.5) +
+  scale_color_manual(values = okabe_ito) +
+  labs(
+    x = "Diameter (inches)", 
+    y = "Biomass (Mean ± SD)", 
+    color = "Species",
+    title = "Biomass by Diameter"
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(face = "italic"),
+    axis.title = element_text(face = "bold"),
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16)
+  )
+
+# Combinar los gráficos en paneles paralelos
+p1 + p2 + 
+  plot_layout(ncol = 2) +
+  plot_annotation(
+    title = "Biomass Analysis by Specihttp://127.0.0.1:10969/graphics/3857aad5-39e7-4e16-ae01-c7bb1f7095d6.pnges and Diameter",
+    theme = theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 18))
+  )
 
